@@ -17,7 +17,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#0f1d33;font-family:'Inter',-apple-system,'Segoe UI',sans-serif;color:var(--ink)}
 .deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
-.stage{width:1280px;height:720px;position:relative;transform-origin:center center}
+.stage{width:1280px;height:720px;position:relative;transform-origin:center center;flex:none}
 .slide{position:absolute;inset:0;background:var(--bg);border-radius:10px;overflow:hidden;display:none;box-shadow:0 20px 60px rgba(0,0,0,.45)}
 .slide.on{display:block}
 /* slide chrome */
@@ -221,10 +221,23 @@ table.dt tr.price td{background:#fff3c4}
   .ctl{display:none}
   @page{size:1280px 720px;margin:0}
 }
-.deck{top:46px;bottom:44px}a.hometop{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:7px 20px;font:600 15px Inter,sans-serif;text-decoration:none;white-space:nowrap}a.hometop:hover{background:var(--green)}@media print{a.hometop{display:none}}</style>
+.deck{top:46px;bottom:44px}a.hometop{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:20;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:7px 20px;font:600 15px Inter,sans-serif;text-decoration:none;white-space:nowrap}a.hometop:hover{background:var(--green)}@media print{a.hometop{display:none}}
+/* mobile */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.rot{display:none}
+body.sm .deck{top:26px;bottom:30px}
+body.sm a.hometop{top:3px;font-size:12px;padding:3px 12px}
+body.sm .ctl{bottom:3px;font-size:11px}
+body.sm .ctl button{padding:3px 10px}
+body.sm.por .deck{top:40px;bottom:110px}
+body.por .rot{display:flex;position:fixed;left:50%;transform:translateX(-50%);bottom:52px;z-index:20;align-items:center;gap:10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:10px;padding:9px 16px;font:600 13px Inter,sans-serif;white-space:nowrap}
+body.por .rot i{font-style:normal;font-size:22px;display:inline-block;animation:rot 2.4s ease-in-out infinite}
+@keyframes rot{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(90deg)}}
+@media print{.rot{display:none!important}}
+</style>
 </head>
 <body>
-<a class="hometop" href="index.html">⌂ Vse predstavitve</a><div class="deck"><div class="stage" id="stage">
+<a class="hometop" href="index.html">⌂ Vse predstavitve</a><div class="rot"><i>📱</i>Za večji prikaz obrnite telefon</div><div class="deck"><div class="stage" id="stage">
 
 <!-- 1 -->
 <section class="slide title"><div class="big"></div><h1>CRM —<br><em>stranke in aktivnosti</em> na enem mestu</h1><p>Kako prodaja v eLogix vodi potencialne in obstoječe stranke: status, kontakti, klici, e-pošta in sestanki, z opomniki v koledarju in povezavo na partnerje in ponudbe.</p><div class="meta">Podatki v predstavitvi so anonimizirani</div></section>
@@ -277,7 +290,7 @@ table.dt tr.price td{background:#fff3c4}
   var s=[].slice.call(document.querySelectorAll('.slide')),i=0,st=document.getElementById('stage');
   try{var h=parseInt(location.hash.slice(1),10);if(h>0&&h<=s.length)i=h-1;}catch(e){}
   function show(){s.forEach(function(x,k){x.classList.toggle('on',k===i)});document.getElementById('ct').textContent=(i+1)+' / '+s.length;try{history.replaceState(null,'','#'+(i+1))}catch(e){}}
-  function fit(){var k=Math.min(window.innerWidth/1320,(window.innerHeight-102)/740);st.style.transform='scale('+k+')'}
+  function fit(){var sm=window.innerWidth<900||window.innerHeight<560;document.body.classList.toggle('sm',sm);var por=window.innerWidth<window.innerHeight&&window.innerWidth<760;document.body.classList.toggle('por',por);var k=Math.min(window.innerWidth/(sm?1286:1320),(window.innerHeight-(sm?(por?150:58):102))/(sm?724:740));st.style.transform='scale('+k+')'}var tx=null,ty=null;document.addEventListener('touchstart',function(e){if(document.querySelector('.zoomov'))return;tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});document.addEventListener('touchend',function(e){if(tx===null)return;var dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;tx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){if(dx<0&&i<s.length-1){i++;show()}else if(dx>0&&i>0){i--;show()}}},{passive:true});
   document.getElementById('nx').onclick=function(){if(i<s.length-1){i++;show()}};
   document.getElementById('pv').onclick=function(){if(i>0){i--;show()}};
   document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){if(i<s.length-1){i++;show()}e.preventDefault()}if(e.key==='ArrowLeft'||e.key==='PageUp'){if(i>0){i--;show()}}});
